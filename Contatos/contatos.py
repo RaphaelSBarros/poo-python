@@ -3,7 +3,7 @@
 
 contacts = []
 
-def add_contact(name: str, phone: str, email: str, favorite: bool = False):
+def create_contact(name: str, phone: str, email: str, favorite: bool = False):
     """_summary_
 
     Args:
@@ -17,8 +17,8 @@ def add_contact(name: str, phone: str, email: str, favorite: bool = False):
                      "Phone":phone,
                      "Email":email,
                      "Favorite":favorite})
-    
-def show_contacts():
+
+def read_contacts():
     """Show all added contacts
     """
     for contact in contacts:
@@ -28,7 +28,7 @@ def show_contacts():
               f"E-mail: {contact["Email"]},",
               f"Favorito: {contact["Favorite"]}")
 
-def show_favorites():
+def read_favorites():
     """Show favorite contacts
     """
     for contact in contacts:
@@ -38,13 +38,68 @@ def show_favorites():
                 f"Telefone: {contact["Phone"]},",
                 f"E-mail: {contact["Email"]},")
 
-def add_favorite(contact_id: int):
+def toggle_favorite(contact_id: int):
     """_summary_
 
     Args:
         contact_id (int): Contact ID
     """
-    contacts[contact_id]["Favorite"] = True
+
+    if contact_id >= len(contacts):
+        return "Esse ID não existe!"
+
+    if contacts[contact_id]["Favorite"] is True:
+        contacts[contact_id]["Favorite"] = False
+    else:
+        contacts[contact_id]["Favorite"] = True
+
+def update_contact(contact_id: int, n: str, p: str, e: str):
+    """Update contacts on the list
+
+    Args:
+        contact_id (int): Contact's identifier
+        n (str): Contact's name
+        p (str): Contact's phone number
+        e (str): Contact's email address
+    """
+    if contact_id >= len(contacts):
+        print("Esse ID não existe!")
+
+    contacts[contact_id]["Name"] = n
+    contacts[contact_id]["Phone"] = p
+    contacts[contact_id]["Email"] = e
 
 while True:
-    choice = input("O que deseja fazer?\n1-Adicionar Contato\n2-Listar Contatos\n3-Listar Favoritos\n4-Adicionar aos Favoritos")
+    print("\n",
+          "1 - Adicionar Contato\n",
+          "2 - Listar Contatos\n",
+          "3 - Listar Favoritos\n",
+          "4 - Adicionar aos Favoritos\n",
+          "5 - Editar Contato\n",
+          "0 - Cancelar")
+    choice = input("O que deseja fazer? ")
+    match choice:
+        case "1":
+            na = input("Informe o nome do contato\n")
+            ph = input("Informe o telefone do contato\n")
+            em = input("informe o email do contato\n")
+            fa = input("Deseja salvar como favorito?s/n\n")
+            if fa == "s":
+                create_contact(na, ph, em, True)
+            else:
+                create_contact(na, ph, em)
+        case "2":
+            read_contacts()
+        case "3":
+            read_favorites()
+        case "4":
+            ID = int(input("Informe o ID do contato que deseja favoritar ou desfavoritar\n"))
+            toggle_favorite(ID)
+        case "5":
+            ID = int(input("Informe o ID do contato que deseja favoritar\n"))
+            na = input("Informe o nome do contato\n")
+            ph = input("Informe o telefone do contato\n")
+            em = input("informe o email do contato\n")
+            update_contact(ID, na, ph, em)
+        case "0":
+            break
